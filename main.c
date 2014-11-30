@@ -2,7 +2,7 @@
  * main.c
  *
  * Basically this implementation of keccak, works with the fixed output length of 512 Keccak[r = 576, c = 1024]
- * This implementation has been made by myself only for better understanding of the Keccak algorithm, therefore
+ * This implementation has been made only for better understanding of the Keccak algorithm.
  *
  *
  *  Created on: Nov 20, 2014
@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "keccak.h"
 
 
@@ -28,12 +29,21 @@ int main (int argc, char *argv[]){
 	if(argc > 1)
 		message = argv[1];
 	else
-		message = "pruebitamuylarguisimalamaslargadelmundoestasiessuperlargalarguisimalatengoquehacermaslargasoloparahaceresapruebafea";
+		message = "prueba2";
 
 
 	int_32 size = strlen(message);
 
-	int_8* result = keccak(message, &size, BIT_RATE, LANE_LENGTH);
+	clock_t begin, end;
+	double timeElapsed;
+
+	begin = clock();
+	int_8* result = keccak((int_8*)message, &size, BIT_RATE, LANE_LENGTH);
+	end = clock();
+
+	timeElapsed = (double)(end - begin) / CLOCKS_PER_SEC;
+
+	printf("Time elapsed: %f seconds \n", timeElapsed);
 
 	for(int i = 0; i < 64; i++){
 		int_8  num = *(result+i);

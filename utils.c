@@ -15,8 +15,8 @@
  */
 int_8* padding(int_8* message, int_32* size, int_32 bitRate){
 
-	int_32 tempSize=*size;
-	int_32 newSize=(tempSize + bitRate - (tempSize % bitRate));
+	int_32 tempSize = *size;
+	int_32 newSize = (tempSize + bitRate - (tempSize % bitRate));
 
 	int_8 *newMessage;
 	newMessage = malloc(newSize);
@@ -50,3 +50,7 @@ int_32 mod (int_32 a, int_32 b){
 	return ret;
 }
 
+//In order to make a cycle rotation
+int_64 rotate(int_64 x, int_8 numBits){
+	return ((x << numBits) | (x >> (64 - numBits)));
+}

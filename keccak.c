@@ -110,13 +110,13 @@ int_64** absorbingPhase(int_64** keccakState, int_64 *message64, int_32* message
 		}
 
 		//TEST-ONLY
-		printMatr(keccakState, i);
+//		printMatr(keccakState, i);
 		//END TEST-ONLY
 
 		keccakState = keccakFunction(keccakState);
 
 		//TEST-ONLY
-		printMatr(keccakState, i + 1);
+//		printMatr(keccakState, i + 1);
 		//END TEST-ONLY
 	}
 
@@ -129,7 +129,7 @@ int_8* squeezingPhase(int_64** keccakState, int_32 bitRate, int_32 laneLength){
 
 	int_64 *Z=(int_64 *)calloc(8,sizeof(int_64));
 
-	while(b<8){
+	while(b < 8){
 		for(int_32 y=0;y<5;y++){
 			if(5*y >= rate)
 				continue;
@@ -144,6 +144,7 @@ int_8* squeezingPhase(int_64** keccakState, int_32 bitRate, int_32 laneLength){
 				}
 			}
 		}
+		keccakState = keccakFunction(keccakState);
 	}
 	return (int_8*) Z;
 }
@@ -155,6 +156,7 @@ int_64** keccakFunction(int_64** keccakState){
 	for(int_32 i=0; i < 24; i++){
 		keccakState = keccakRound(keccakState, ROUND_CONSTANTS[i]);
 	}
+
 	return keccakState;
 }
 
@@ -168,7 +170,7 @@ int_64** keccakRound(int_64 ** keccakState, int_64 roundConstant){
 		C[x] = keccakState[x][0] ^ keccakState[x][1] ^ keccakState[x][2]^ keccakState[x][3] ^ keccakState[x][4];
 	}
 	for(int_8 x=0; x < 5 ; x++ ){
-		D[x] = C[(x + 4) % 5] ^ ((C[(x + 1) % 5] << 1) | (C[(x + 1) % 5] >> 63));
+		D[x] = C[mod((x - 1), 5)] ^ rotate(C[ mod((x + 1), 5)], 1);
 	}
 	for(int_8 x = 0; x < 5 ; x++ ){
 		for(int_8 y=0;y<5;y++){
@@ -179,18 +181,19 @@ int_64** keccakRound(int_64 ** keccakState, int_64 roundConstant){
 	//---RHO & PHI steps---
 	for(int_8 x=0;x<5;x++){
 		for(int_8 y=0;y<5;y++){
-			B[y][mod((2*x+3*y),5)]=((keccakState[x][y] << ROTATION_OFFSETS[x][y]) | (keccakState[x][y] >> (64 - ROTATION_OFFSETS[x][y])));
+			B[y][mod((2*x+3*y), 5)] = rotate(keccakState[x][y], ROTATION_OFFSETS[x][y]);
 		}
 	}
 
 	//---XI step---
 	for(int_8 x=0;x<5;x++){
 		for(int_8 y=0;y<5;y++){
-			keccakState[x][y]=B[x][y]^((~B[mod((x+1),5)][y]) & B[mod((x+2),5)][y]);
+			keccakState[x][y] = B[x][y]^((~B[mod((x+1),5)][y]) & B[mod((x+2),5)][y]);
 		}
 	}
 
-	keccakState[0][0]=keccakState[0][0]^roundConstant;
+	//---IOTA step---
+	keccakState[0][0] = keccakState[0][0] ^ roundConstant;
 
 	return keccakState;
 }
@@ -223,7 +226,7 @@ void printMatr(int_64 **keccakState, int_32 step){
 		for(int_32 x=0;x<5;x++){
 			if(x == 0) printf("[");
 
-			printf("%X", keccakState[x][y]);
+			printf("%.8X", keccakState[x][y]);
 
 			if(x >= 0 && x < 4){
 				printf(", ");
