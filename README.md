@@ -8,4 +8,4 @@ https://eclipse.org/downloads/
 
 The compilation is done using the command make in a 64 bits linux machine.
 
-For running ./sha3.out prueba
+For running ./sha3.out <string>
