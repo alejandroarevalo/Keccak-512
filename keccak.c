@@ -95,7 +95,7 @@ int_64** initialize(int_8* message, int_32* messageSize, int_32 bitRate){
 int_64** absorbingPhase(int_64** keccakState, int_64 *message64, int_32* messageSize, int_32 bitRate, int_32 laneLength){
 	int_32 rate = bitRate/laneLength;
 
-	//After the padding the messageSize is a multiple of bitRate.
+	//After the padding, the messageSize is a multiple of bitRate.
 	for(int_32 i=0; i < ((*messageSize)/bitRate) ; i++){
 
 		for(int_32 j=0; j<5; j++){

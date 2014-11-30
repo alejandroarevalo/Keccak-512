@@ -44,10 +44,10 @@ int_8* padding(int_8* message, int_32* size, int_32 bitRate){
 int_32 mod (int_32 a, int_32 b){
 	if(b < 0)
 		return mod(-a, -b);
-	int ret = a % b;
-	if(ret < 0)
-		ret+=b;
-	return ret;
+	int res = a % b;
+	if(res < 0)
+		res+=b;
+	return res;
 }
 
 //In order to make a cycle rotation
