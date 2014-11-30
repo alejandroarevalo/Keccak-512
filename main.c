@@ -50,4 +50,6 @@ int main (int argc, char *argv[]){
 		printf("%.2X", num);
 	}
 
+	printf("\n");
+
 }
