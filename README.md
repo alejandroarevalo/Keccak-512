@@ -6,6 +6,8 @@ Implementation of Keccak using an output length of 512, only for help understand
 This implementation has been done using the Eclipse IDE Luna 4.4.1 that can be found in:
 https://eclipse.org/downloads/
 
+im a test
+
 The compilation is done using the command make in a 64 bits linux machine.
 
 For running ./sha3.out <string>
